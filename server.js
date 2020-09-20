@@ -1,7 +1,7 @@
 // RADIUS is a dial in server service 
 // That is the authentication method, the user has to dial in 
 // Authentication, Authorization 
-// 
+// Proxy needs to ask server here's the username and password I got, can I grant them access? 
 
 var udp = require('dgram');
 
@@ -17,11 +17,15 @@ server.on('error',function(error){
 });
 
 // Emits on new datagram msg
+// Authentication request
+// User sends request to access service with their username and password 
 server.on('message',function(msg,info){
   console.log('Data received from client : ' + msg.toString());
   console.log('Received %d bytes from %s:%d\n',msg.length, info.address, info.port);
 
 //Sending msg
+// Authentication request compared with database to see if user is part of that database 
+//Once verified RADIUS server sends packet back with privileges and access rights 
 server.send(msg,info.port,'localhost',function(error){
   if(error){
     client.close();
@@ -34,6 +38,8 @@ server.send(msg,info.port,'localhost',function(error){
 });
 
 //Emits when socket is ready and listening for datagram msgs
+// Authentication request accepted 
+
 server.on('listening',function(){
   var address = server.address();
   var port = address.port;
