@@ -1,3 +1,10 @@
+///////////////// RADIUS SERVER ////////////////////
+
+// NodeJS server that listens on a port and acts like a radius server
+// Receives username, password combination inside of a packet/request 
+// Access - Accepted or Access- Rejeected or Access-Wrong Secret Key 
+// Limit the access to specific hosts or ips so as to prevent guessing of logins
+
 //require radius package 
 var radius = require('radius');
 //require dgram package 

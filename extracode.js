@@ -1,4 +1,44 @@
-// RADIUS is a dial in server service 
+///////Client Code///////
+// -------------------- UDP client ----------------
+
+var buffer = require('buffer');
+
+// creating a client socket
+var client = udp.createSocket('udp4');
+
+//buffer msg
+var data = Buffer.from('Suzana');
+
+client.on('message',function(msg,info){
+  console.log('Data received from server : ' + msg.toString());
+  console.log('Received %d bytes from %s:%d\n',msg.length, info.address, info.port);
+});
+
+//sending msg
+client.send(data,1812,'localhost',function(error){
+  if(error){
+    client.close();
+  }else{
+    console.log('Data sent !!!');
+  }
+});
+
+var data1 = Buffer.from('hello');
+var data2 = Buffer.from('world');
+
+//sending multiple msg
+client.send([data1,data2],1812,'localhost',function(error){
+  if(error){
+    client.close();
+  }else{
+    console.log('Data sent !!!');
+  }
+});
+
+
+//////Server Code///////
+
+/ RADIUS is a dial in server service 
 // That is the authentication method, the user has to dial in 
 // Authentication, Authorization 
 // Proxy needs to ask server here's the username and password I got, can I grant them access? 
