@@ -1,9 +1,14 @@
+// Require several libraries: npm, dgram, util 
 var radius = require('/Users/suzanavukovic/Desktop/Projects/WorkingVPN/NodeRadius/RadiusServer/node_modules/radius');
 var dgram = require('dgram');
 var util = require('util');
 
+// Secret message needed in order to gain access to server
 var secret = 'radius_secret';
 
+// Once the packet is received on port 1812 
+// Access request includes NAS IP  , username and password 
+// if the credentials are acceptable as per the server, then server access granted
 var packet_accepted = {
   code: "Access-Request",
   secret: secret,
@@ -15,29 +20,31 @@ var packet_accepted = {
   ]
 };
 
+// credentials are not accepted as per the server, server access rejected 
 var packet_rejected = {
   code: "Access-Request",
   secret: secret,
   identifier: 1,
   attributes: [
     ['NAS-IP-Address', '10.5.5.5'],
-    ['User-Name', 'egarak'],
-    ['User-Password', 'tailoredfit']
+    ['User-Name', 'suzana'],
+    ['User-Password', 'rocks']
   ]
 };
 
+// Credentials may be right but secret code is wrong so the server access is not granted
 var packet_wrong_secret = {
   code: "Access-Request",
   secret: "wrong_secret",
   identifier: 2,
   attributes: [
     ['NAS-IP-Address', '10.5.5.5'],
-    ['User-Name', 'riker'],
-    ['User-Password', 'Riker-Omega-3']
+    ['User-Name', 'borojeprdo'],
+    ['User-Password', 'true']
   ]
 };
 
-// client socket created here 
+// client socket created here , udp 
 var client = dgram.createSocket("udp4");
 
 //bind to the socket I want 
@@ -71,13 +78,17 @@ client.on('message', function(msg, rinfo) {
   }
 });
 
+// keep track of the packets I sent; whether they are accepted, rejected, have right 
+// credentials and wrong secret 
 var sent_packets = {};
 
+//for each of the packets, encode the packet information and the secret code 
 [packet_accepted, packet_rejected, packet_wrong_secret].forEach(function(packet) {
   var encoded = radius.encode(packet);
   sent_packets[packet.identifier] = {
     raw_packet: encoded,
     secret: packet.secret
   };
+  //send the packet information as is with the encoded information, via 
   client.send(encoded, 0, encoded.length, 1812, "localhost");
 });

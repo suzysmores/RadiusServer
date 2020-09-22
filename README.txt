@@ -8,4 +8,5 @@ sending and prepare responses to receive packets. It supports RADIUS authenticat
 
 /////////////Needs for Our Project//////////////// 
 * Authentication needed
-*
+*Read Username and Password, if the user does not exist in our database do not send the packet 
+
