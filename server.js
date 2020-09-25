@@ -10,6 +10,23 @@ var radius = require('radius');
 //require dgram package 
 var dgram = require("dgram");
 
+
+//////////////////////////////////////WHITELIST IPs////////////////////////////////////
+// for whitelisting certain IP addresses, and denying other IPS use the following dependencies
+// //init dependencies
+// var express = require('express')
+// var ipfilter = require('express-ipfilter').IpFilter
+ 
+// // Whitelist the following IPs
+const whitelist = ['127.3.0.1', '10.5.5.5']
+
+
+// // Create the server
+// app.use(ipfilter(ips, { mode: 'allow' }))
+// app = module.exports
+
+///////////////////////////////
+
 // require a secret key for these users to get granted access
 // not just username and password  
 var secret = 'radius_secret';
@@ -17,6 +34,10 @@ var server = dgram.createSocket("udp4");
 
 //turn server on, but we require username, password 
 server.on("message", function (msg, rinfo) {
+  console.log(rinfo);
+  if (whitelist.indexOf(rinfo.address) == -1){
+    console.log('Get out of here!');
+  } 
   var code, username, password, packet;
   // decode that packet with the message and decode the secret as well
   // the secret will allow us to grant access or not 
@@ -31,9 +52,10 @@ server.on("message", function (msg, rinfo) {
   //Grab the username and password of the packet we receive 
   username = packet.attributes['User-Name'];
   password = packet.attributes['User-Password'];
+  //NAS_IP_Address = packet.attributes['NAS-IP-Address'];
 
   // Print who were sending an access request packet for 
-  console.log('Access-Request for ' + username);
+  console.log('Access-Request for: ' + username + ' from: ' + rinfo.address);
 
   // Check if were accepting the user or rejecting them
   // This also tells our server whether to send info or not
@@ -70,3 +92,5 @@ server.on("listening", function () {
 });
 
 server.bind(1812);
+
+////find local ip address //////////

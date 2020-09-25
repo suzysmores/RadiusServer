@@ -13,6 +13,7 @@ sending and prepare responses to receive packets. It supports RADIUS authenticat
 
 
 //////////How to Use This/////////////////
-1. Run Node-Radius-Server.JS in one terminal 
-2. Run Node-Radius-Client.JS in another terminal 
-3. 
+1. Edit IP Range you want to allow in Node-Radius-Server.JS
+2. Run Node-Radius-Server.JS in one terminal 
+3. Run Node-Radius-Client.JS in another terminal 
+4. Emjoy your up and running RADIUS server! 

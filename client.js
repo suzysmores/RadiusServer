@@ -1,7 +1,7 @@
 // Require several libraries: npm, dgram, util 
 var radius = require('/Users/suzanavukovic/Desktop/Projects/WorkingVPN/NodeRadius/RadiusServer/node_modules/radius');
 var dgram = require('dgram');
-var util = require('util');
+const util = require('util');
 
 // Secret message needed in order to gain access to server
 var secret = 'radius_secret';
@@ -56,6 +56,7 @@ var response_count = 0;
 //packet looks at the username, pass, secret 
 client.on('message', function(msg, rinfo) {
   var response = radius.decode({packet: msg, secret: secret});
+  //console.log(response.attributes[1]);
   var request = sent_packets[response.identifier];
 
   // although it's a slight hassle to keep track of packets, it's a good idea to verify
@@ -66,10 +67,10 @@ client.on('message', function(msg, rinfo) {
     secret: request.secret
   });
   if (valid_response) {
-    console.log('Got valid response ' + response.code + ' for packet id ' + response.identifier);
+    console.log('Got valid response ' + response.code + ' for packet id:  ' + response.identifier);
     // take some action based on response.code
   } else {
-    console.log('WARNING: Got invalid response ' + response.code + ' for packet id ' + response.identifier);
+    console.log('WARNING: Got invalid response ' + response.code + ' for packet id: ' + response.identifier);
     // don't take action since server cannot be trusted (but maybe alert user that shared secret may be incorrect)
   }
 
